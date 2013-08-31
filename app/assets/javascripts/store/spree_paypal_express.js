@@ -1,5 +1,3 @@
-//= require store/spree_frontend
-
 SpreePaypalExpress = {
   hidePaymentSaveAndContinueButton: function(paymentMethod) {
     if (SpreePaypalExpress.paymentMethodID && paymentMethod.val() == SpreePaypalExpress.paymentMethodID) {
