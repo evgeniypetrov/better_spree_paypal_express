@@ -12,8 +12,10 @@ SpreePaypalExpress = {
 
 $(document).ready(function() {
   checkedPaymentMethod = $('div[data-hook="checkout_payment_step"] input[type="radio"]:checked');
-  SpreePaypalExpress.hidePaymentSaveAndContinueButton(checkedPaymentMethod);
-  paymentMethods = $('div[data-hook="checkout_payment_step"] input[type="radio"]').click(function (e) {
-    SpreePaypalExpress.hidePaymentSaveAndContinueButton($(e.target));
-  });
+  if (checkedPaymentMethod.length > 0) {
+    SpreePaypalExpress.hidePaymentSaveAndContinueButton(checkedPaymentMethod);
+    paymentMethods = $('div[data-hook="checkout_payment_step"] input[type="radio"]').click(function (e) {
+      SpreePaypalExpress.hidePaymentSaveAndContinueButton($(e.target));
+    });
+  }
 })
