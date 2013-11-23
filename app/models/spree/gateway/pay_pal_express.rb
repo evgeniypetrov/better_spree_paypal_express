@@ -9,16 +9,21 @@ module Spree
     attr_accessible :preferred_login, :preferred_password, :preferred_signature
 
     def provider_class
+      configure_provider
       ::PayPal::SDK::Merchant::API.new
     end
 
     def provider
+      configure_provider
+      provider_class
+    end
+
+    def configure_provider
       ::PayPal::SDK.configure(
         :mode      => preferred_server.present? ? preferred_server : "sandbox",
         :username  => preferred_login,
         :password  => preferred_password,
         :signature => preferred_signature)
-      provider_class
     end
 
     def auto_capture?
@@ -30,6 +35,7 @@ module Spree
     end
 
     def purchase(amount, express_checkout, gateway_options={})
+      currencyID = gateway_options[:currency] || Spree::Config[:currency]
       pp_request = provider.build_do_express_checkout_payment({
         :DoExpressCheckoutPaymentRequestDetails => {
           :PaymentAction => "Sale",
@@ -37,8 +43,8 @@ module Spree
           :PayerID => express_checkout.payer_id,
           :PaymentDetails => [{
             :OrderTotal => {
-              :currencyID => Spree::Config[:currency],
-              :value => ::Money.new(amount, Spree::Config[:currency]).to_s }
+              :currencyID => currencyID,
+              :value => ::Money.new(amount, currencyID).to_s }
           }]
         }
       })
