@@ -73,7 +73,7 @@ module Spree
         flash[:commerce_tracking] = 'nothing special'
         session[:successfully_ordered] = true
 
-        redirect_to order_path(order, :token => order.token)
+        redirect_to completion_route
       else
         redirect_to checkout_state_path(order.state)
       end
@@ -82,6 +82,12 @@ module Spree
     def cancel
       flash[:notice] = "Don't want to use PayPal? No problems."
       redirect_to checkout_state_path(current_order.state)
+    end
+
+    protected
+
+    def completion_route
+      order_path(current_order, token: current_order.token)
     end
 
     private
